@@ -359,8 +359,8 @@ if __name__ == '__main__':
     print("SPAM DETECTION INFERENCE API")
     print("=" * 60)
     print(f"Author: Yudhistira Paksi (dysnomia)")
-    print(f"Starting server on http://localhost:5000")
-    print(f"Metrics available at: http://localhost:5000/metrics")
+    print(f"Starting server on http://localhost:8000")
+    print(f"Metrics available at: http://localhost:8000/metrics")
     print("=" * 60)
     
-    app.run(host='0.0.0.0', port=5000, debug=False)
+    app.run(host='0.0.0.0', port=8000, debug=False)
