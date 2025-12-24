@@ -1,0 +1,35 @@
+FROM python:3.12-slim
+
+# Set working directory
+WORKDIR /app
+
+# Install Flask and dependencies (compatible versions for Python 3.12)
+RUN pip install --no-cache-dir \
+    flask==3.0.0 \
+    scikit-learn==1.5.2 \
+    joblib==1.4.2 \
+    pandas==2.2.0
+
+# Copy model serving API
+COPY serve_model.py /app/
+
+# Copy vectorizer
+COPY vectorizer.joblib /app/
+
+# Create models directory and copy model
+RUN mkdir -p /app/models
+COPY models/spam_detection_model.joblib /app/models/
+
+# Expose serving port
+EXPOSE 5001
+
+# Set environment variables
+ENV MODEL_PATH=/app/models/spam_detection_model.joblib
+ENV VECTORIZER_PATH=/app/vectorizer.joblib
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD python -c "import requests; requests.get('http://localhost:5001/health')"
+
+# Run serving API
+CMD ["python", "serve_model.py"]
